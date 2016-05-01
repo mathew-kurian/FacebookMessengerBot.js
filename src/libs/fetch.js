@@ -1,5 +1,4 @@
 import request from 'superagent';
-import TraceError from 'trace-error';
 
 export default function fetch(url, opts = {}) {
   return new Promise((resolve, reject) => {
@@ -55,6 +54,14 @@ export default function fetch(url, opts = {}) {
 
         reject(err);
       } else {
+        if ((opts.json || /\/json/g.test(res.headers['Content-Type'])) && res.text) {
+          try {
+            res.body = JSON.parse(res.text.trim());
+          } catch (e) {
+            // ignore
+          }
+        }
+
         resolve(res);
       }
     });

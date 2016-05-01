@@ -4,9 +4,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _entries = require('babel-runtime/core-js/object/entries');
+
+var _entries2 = _interopRequireDefault(_entries);
+
+var _getIterator2 = require('babel-runtime/core-js/get-iterator');
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _typeof2 = require('babel-runtime/helpers/typeof');
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
 
 exports.default = fetch;
 
@@ -14,18 +34,14 @@ var _superagent = require('superagent');
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _traceError = require('trace-error');
-
-var _traceError2 = _interopRequireDefault(_traceError);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function fetch(url) {
   var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  return new Promise(function (resolve, reject) {
-    if (_typeof(opts.body) === 'object' || opts.json) {
-      opts.headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+  return new _promise2.default(function (resolve, reject) {
+    if ((0, _typeof3.default)(opts.body) === 'object' || opts.json) {
+      opts.headers = (0, _assign2.default)({ 'Content-Type': 'application/json' }, opts.headers || {});
     }
 
     var method = opts.method || 'get';
@@ -49,8 +65,8 @@ function fetch(url) {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = Object.entries(opts.headers)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var _step$value = _slicedToArray(_step.value, 2);
+        for (var _iterator = (0, _getIterator3.default)((0, _entries2.default)(opts.headers)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _step$value = (0, _slicedToArray3.default)(_step.value, 2);
 
           var k = _step$value[0];
           var v = _step$value[1];
@@ -105,6 +121,14 @@ function fetch(url) {
 
         reject(err);
       } else {
+        if ((opts.json || /\/json/g.test(res.headers['Content-Type'])) && res.text) {
+          try {
+            res.body = JSON.parse(res.text.trim());
+          } catch (e) {
+            // ignore
+          }
+        }
+
         resolve(res);
       }
     });

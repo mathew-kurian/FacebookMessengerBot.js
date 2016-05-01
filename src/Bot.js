@@ -1,34 +1,38 @@
 import EventEmitter from 'events';
+import bodyParser from 'body-parser';
 import {Router} from 'express';
-import Message from './Message.es6';
-import ButtonSet from './ButtonSet.es6';
-import fetch from './libs/fetch.es6';
+import Elements from './Elements.js';
+import Buttons from './Buttons.js';
+import fetch from './libs/fetch.js';
 import _ from 'lodash';
 
-export {Message, ButtonSet};
+export {Elements, Buttons};
+
+const userCache = {};
 
 export async function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time));
 }
 
-class FacebookMessengerBot extends EventEmitter {
-  static ButtonSet = ButtonSet;
-  static Message = Message;
-
-  static REQUEST_BODY = 'request-body';
+class Bot extends EventEmitter {
+  static Buttons = Buttons;
+  static Elements = Elements;
 
   static wait = wait;
 
-  constructor(token, verification) {
+  constructor(token, verification, debug = false) {
     super();
 
     this._token = token;
+    this._debug = debug;
     this._verification = verification;
-
-    this.on(FacebookMessengerBot.REQUEST_BODY, this._onReceiveMessage);
   }
 
   async send(to, message) {
+    if (this._debug) {
+      console.log({recipient: {id: to}, message: message ? message.toJSON() : message});
+    }
+
     try {
       await fetch('https://graph.facebook.com/v2.6/me/messages', {
         method: 'post',
@@ -52,20 +56,40 @@ class FacebookMessengerBot extends EventEmitter {
     }
   }
 
-  async _onReceiveMessage(body) {
+  async fetchUser(id, fields = 'first_name,last_name,profile_pic', cache = false) {
+    const key = id + fields;
+    let props;
+
+    if (cache && userCache[key]) {
+      props = userCache[key];
+      props.fromCache = true;
+    } else {
+      const {body} = await fetch(`https://graph.facebook.com/v2.6/${id}`, {
+        query: {access_token: this._token, fields}, json: true
+      });
+
+      props = body;
+      props.fromCache = false;
+
+      if (cache) {
+        userCache[key] = props;
+      }
+    }
+
+    return props;
+  }
+
+  async handleMessage(input) {
+    const body = JSON.parse(JSON.stringify(input));
     const message = body.entry[0].messaging[0];
     Object.assign(message, message.message);
     delete message.message;
 
-    message.raw = JSON.parse(JSON.stringify(body));
+    message.raw = input;
 
-    message.sender.fetch = async () => {
-      const {text} = await fetch(`https://graph.facebook.com/v2.6/${message.sender.id}`, {
-        query: {access_token: this._token, fields: 'first_name,last_name,profile_pic'}
-      });
-
-      Object.assign(message.sender, JSON.parse(text));
-
+    message.sender.fetch = async (fields, cache) => {
+      const props = await this.fetchUser(message.sender.id, fields, cache);
+      Object.assign(message.sender, props);
       return message.sender;
     };
 
@@ -83,15 +107,32 @@ class FacebookMessengerBot extends EventEmitter {
         message.data = postback.data;
         message.event = postback.event;
 
-        this.emit('postback', message.event, message.data, message);
+        this.emit('postback', message.event, message, message.data);
 
         if (postback.hasOwnProperty('event')) {
-          this.emit(message.event, message.data, message);
+          this.emit(message.event, message, message.data);
         }
       } else {
-        this.emit('invalid-postback', message.postback, message);
+        this.emit('invalid-postback', message, message.postback);
       }
 
+      return;
+    }
+
+    if (message.delivery) {
+      Object.assign(message, message.delivery);
+      message.delivered = message.delivery.mids;
+
+      delete message.delivery;
+
+      this.emit('delivery', message, message.delivered);
+      return;
+    }
+
+    if (message.optin) {
+      message.param = message.optin.ref || true;
+      message.optin = message.param;
+      this.emit('optin', message, message.optin);
       return;
     }
 
@@ -125,6 +166,8 @@ class FacebookMessengerBot extends EventEmitter {
   router() {
     const router = new Router();
 
+    router.use(bodyParser.json());
+
     router.get('/', (req, res) => {
       if (req.query['hub.verify_token'] === this._verification) {
         res.send(req.query['hub.challenge']);
@@ -134,7 +177,7 @@ class FacebookMessengerBot extends EventEmitter {
     });
 
     router.post('/', (req, res) => {
-      this.emit(FacebookMessengerBot.REQUEST_BODY, req.body);
+      this.handleMessage(req.body);
       res.send().status(200);
     });
 
@@ -142,4 +185,6 @@ class FacebookMessengerBot extends EventEmitter {
   }
 }
 
-export default FacebookMessengerBot;
+export {Bot};
+
+export default Bot;

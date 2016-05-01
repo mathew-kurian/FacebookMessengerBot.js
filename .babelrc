@@ -5,6 +5,7 @@
   ],
   "plugins": [
     "array-includes",
+    "transform-runtime",
     "syntax-async-functions",
     "transform-object-rest-spread",
     "syntax-class-properties",

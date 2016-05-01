@@ -1,11 +1,62 @@
-# Facebook Messenger Bot
+# Facebook Messenger Bot 
+[![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)  
 The purpose of this library is to offer a simple, light-weight Facebook Messenger Bot API for Node with ES6 support. 
-Internally, it uses *Promises* to ensure compatibility with `async/await`. 
+Internally, it uses [Promises to ensure compatibility with `async/await`](https://github.com/bluejamesbond/FacebookMessengerBot.js/blob/master/.babelrc#L13). 
 
-## API By Example
 **Objective:** Given a set of inputs, the library automatically selects the optimal message format to display this data.
 
-### 1. Attach Express Router for Verification and Receiving Messages
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Install](#install)
+- [Example](#example)
+- [Demo](#demo)
+- [API By Example](#api-by-example)
+  - [Attach Express Router for Verification and Receiving Messages](#attach-express-router-for-verification-and-receiving-messages)
+  - [Receive Messages](#receive-messages)
+  - [Send Responses](#send-responses)
+  - [Handle Postbacks](#handle-postbacks)
+  - [Delivery and Optin](#delivery-and-optin)
+  - [Pipe Messages into Bot (i.e. I don't use Express!)](#pipe-elements-into-bot-ie-i-dont-use-express)
+  - [Debugging](#debugging)
+  - [Extras: Fetch User](#extras-fetch-user)
+- [Next Release (very soon)](#next-release-very-soon)
+- [Maintainers](#maintainers)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Install 
+```
+npm install facebook-messenger-bot --save -E
+```
+
+## Example
+```es6
+import {Bot, Elements} from 'facebook-messenger-bot';
+
+const bot = new Bot(myPageAccessToken, myVerification);
+
+bot.on('message', async message => {
+    const {sender} = message;
+    await sender.fetch('first_name');
+    
+    const out = new Elements();
+    out.add({text: `hey ${sender.first_name}, how are you!`});
+    
+    await bot.send(sender.id, out);
+});
+
+const app = express();
+app.use('/facebook', bot.router());
+app.listen(3000);
+```
+
+## Demo
+Coming soon
+
+## API By Example
+
+### Attach Express Router for Verification and Receiving Messages
 ```es6
 import express from 'express';
 import {Bot} from 'facebook-messenger-bot'; // import Bot class
@@ -17,8 +68,10 @@ app.use('/facebook', bot.router()); // use the router
 app.listen(3000);
 ```
 
-### 2. Receive a Message
+### Receive Messages
 ```es6
+import {Elements} from 'facebook-messenger-bot';
+
 bot.on('message', async message => {
     const {sender} = message;
     
@@ -26,7 +79,7 @@ bot.on('message', async message => {
     console.log(`Received a message from ${sender.id}`);
     
     // fetch additional user properties
-    await sender.fetch(`first_name,last_name,profile_pic`);
+    await sender.fetch(`first_name,last_name,profile_pic`, true); // true: use cache
     
     console.log(`Fetched ${sender.first_name}, ${sender.last_name}, ${sender.profile_pic}`);
     
@@ -56,9 +109,9 @@ bot.on('message', async message => {
 });
 ```
 
-### 3. Send a Responses
-```
-import {Message} from 'facebook-messenger-bot'; // import Bot class
+### Send Responses
+```es6
+import {Elements} from 'facebook-messenger-bot'; // import Bot class
 
 bot.on('message', async message => {
     const {sender} = message;
@@ -66,7 +119,7 @@ bot.on('message', async message => {
     let out, buttons;
     
     // ---- send text
-    out = new Message();
+    out = new Elements();
     out.add({text: 'hey! what up'});
     await bot.send(sender.id, out);
     
@@ -74,35 +127,35 @@ bot.on('message', async message => {
     await bot.wait(1000);
     
     // ---- send image
-    const out = new Message();
+    const out = new Elements();
     out.add({image: 'https://developers.facebook.com/images/devsite/fb4d_logo-2x.png'});
     await bot.send(sender.id, out);
     
     await bot.wait(1000);
     
     // ---- send buttons (single card)
-    buttons = new ButtonSet();
+    buttons = new Buttons();
     buttons.add({text: 'Google', url: 'http://google.com'});
     buttons.add({text: 'Yahoo', url: 'http://yahoo.com'});
     buttons.add({text: 'Bing', url: 'http://bing.com'});
-    out = new Message();
+    out = new Elements();
     out.add({text: 'search engines', subtext: 'click to get redirected', buttons}); // add a card
     await bot.send(to, out);
     
-    await sleep(2000);
+    await bot.wait(2000);
     
     // ---- send image + buttons (multiple cards)
-    buttons = new ButtonSet();
+    buttons = new Buttons();
     buttons.add({text: 'Google', url: 'http://google.com'});
     buttons.add({text: 'Yahoo', url: 'http://yahoo.com'});
-    out = new Message();
+    out = new Elements();
     out.add({image: 'http://google.com/logo.png', text: 'hey', buttons}); // first card
     out.add({image: 'http://yahoo.com/logo.png', text: 'hey', buttons}); // second card
     await bot.send(to, out);
 });
 ```
-### 3. Handle Postbacks
-```
+### Handle Postbacks
+```es6
 bot.on('message', async message => {
     const {sender} = message;
         
@@ -113,7 +166,7 @@ bot.on('message', async message => {
     buttons.add({text: 'Google', data: 'google', event: 'search-engine'});
     buttons.add({text: 'Bing', data: 'bing', event: 'search-engine'});
     buttons.add({text: 'Yahoo', data: 'yahoo', event: 'search-engine'});
-    out = new FacebookMessengerBot.Message();
+    out = new Elements();
     out.add({image: 'http://someimage.com', text: 'hey', buttons});
     await bot.send(to, out);
     await sleep(2000);
@@ -124,8 +177,11 @@ bot.on('search-engine', async (data, message) => {
 });
 
 // all postbacks are emitted via 'postback'
-bot.on('postback', async (event, data, message) => {
-    console.log(event, data, message);
+bot.on('postback', async (event, message, data) => {
+    assert(data === message.data);
+    assert(event === message.event);
+    
+    console.log(event, message, data);
 });
 
 // if the data cannot be parsed, an 'invalid-postback' is emitted
@@ -134,10 +190,51 @@ bot.on('invalid-postback', async (message) => {
 });
 ```
 
-### 4. Pipe Messages into Bot (i.e. I don't use Express!)
-```
-bot.emit(Bot.REQUEST_BODY, req.body);
+### Delivery and Optin
+```es6
+bot.on('optin', async (message, param) => {
+    assert(param === message.param);
+    assert(param === message.optin);
+
+    console.log(message, param);
+});
+
+bot.on('delivery', async (message, mids) => {
+    assert(mids === message.delivered);
+
+    console.log(message, mids);
+});
 ```
 
-### Tests
-Coming very soon on Travis CI
+### Pipe Messages into Bot (i.e. I don't use Express!)
+```es6
+bot.handleMessage(req.body);
+```
+
+### Debugging
+```es6
+buttons = new Buttons();
+out = new Elements();
+
+...
+
+// you can compare these output with the ones provided on the Facebook website
+console.log(buttons.toJSON());
+console.log(out.toJSON());
+
+// access raw parsed object via 'message' event
+bot.on('message', message => {
+    console.log(message.raw);
+});
+```
+
+### Extras: Fetch User
+```es6
+const user = await bot.fetchUser(id, 'first_name,last_name', true);   // true for cache
+```
+
+## Next Release (very soon)
+- Create receipt messages
+
+## Maintainers
+Looking for additional maintainers this repo. Let me know if you are interested.

@@ -17,7 +17,7 @@ module.exports = grunt => {
         files: [{
           expand: true,
           cwd: 'src/',
-          src: ['**/**.es6'],
+          src: ['**/**.js'],
           dest: 'dist/',
           ext: '.js'
         }]

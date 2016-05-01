@@ -25,6 +25,10 @@ class ButtonSet {
 
     return buttons;
   }
+
+  get length() {
+    return this._buttons.length;
+  }
 }
 
 export default ButtonSet;

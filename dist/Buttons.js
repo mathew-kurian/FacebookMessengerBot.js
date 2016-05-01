@@ -4,18 +4,32 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _stringify = require('babel-runtime/core-js/json/stringify');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _getIterator2 = require('babel-runtime/core-js/get-iterator');
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ButtonSet = function () {
   function ButtonSet() {
-    _classCallCheck(this, ButtonSet);
+    (0, _classCallCheck3.default)(this, ButtonSet);
 
     this._buttons = [];
   }
 
-  _createClass(ButtonSet, [{
+  (0, _createClass3.default)(ButtonSet, [{
     key: 'add',
     value: function add(_ref) {
       var text = _ref.text;
@@ -39,13 +53,13 @@ var ButtonSet = function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this._buttons[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = (0, _getIterator3.default)(this._buttons), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var button = _step.value;
 
           if (button.url) {
             buttons.push({ type: 'web_url', url: button.url, title: button.text });
           } else if (button.data) {
-            var payload = JSON.stringify({ data: button.data, event: button.event });
+            var payload = (0, _stringify2.default)({ data: button.data, event: button.event });
             buttons.push({ type: 'postback', payload: payload, title: button.text });
           }
         }
@@ -66,10 +80,14 @@ var ButtonSet = function () {
 
       return buttons;
     }
+  }, {
+    key: 'length',
+    get: function get() {
+      return this._buttons.length;
+    }
   }]);
-
   return ButtonSet;
 }();
 
 exports.default = ButtonSet;
-//# sourceMappingURL=ButtonSet.js.map
+//# sourceMappingURL=Buttons.js.map

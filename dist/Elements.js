@@ -4,26 +4,50 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends2 = require('babel-runtime/helpers/extends');
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _extends3 = _interopRequireDefault(_extends2);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _getIterator2 = require('babel-runtime/core-js/get-iterator');
 
-var Message = function () {
-  function Message() {
-    _classCallCheck(this, Message);
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _Buttons = require('./Buttons');
+
+var _Buttons2 = _interopRequireDefault(_Buttons);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Elements = function () {
+  function Elements() {
+    (0, _classCallCheck3.default)(this, Elements);
 
     this._elements = [];
   }
 
-  _createClass(Message, [{
+  (0, _createClass3.default)(Elements, [{
     key: 'add',
     value: function add(_ref) {
       var text = _ref.text;
       var image = _ref.image;
       var subtext = _ref.subtext;
       var buttons = _ref.buttons;
+
+      if (buttons) {
+        if (!(buttons instanceof _Buttons2.default)) {
+          throw Error('buttons not instanceof Buttons');
+        }
+      } else {
+        buttons = null;
+      }
 
       this._elements.push({ text: text, image: image, subtext: subtext, buttons: buttons });
       return this;
@@ -38,14 +62,14 @@ var Message = function () {
         var _iteratorError = undefined;
 
         try {
-          for (var _iterator = this._elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (var _iterator = (0, _getIterator3.default)(this._elements), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var e = _step.value;
 
             var element = {};
             if (e.text) element.title = e.text;
             if (e.image) element.image_url = e.image;
             if (e.subtext) element.subtitle = e.subtext;
-            if (e.buttons) element.buttons = e.buttons;
+            if (e.buttons && e.buttons.length) element.buttons = e.buttons.toJSON();
             elements.push(element);
           }
         } catch (err) {
@@ -67,17 +91,17 @@ var Message = function () {
       } else if (this._elements.length === 1) {
         var _e = this._elements[0];
         var _element = {};
-        if (_e.text && _e.buttons && _e.image) {
+        if (_e.text && _e.buttons && _e.buttons.length && _e.image) {
           _element.title = _e.text;
           _element.image_url = _e.image;
           if (_e.subtext) _element.subtitle = _e.subtext;
-          _element.buttons = _e.buttons;
+          _element.buttons = _e.buttons.toJSON();
           return { attachment: { type: 'template', payload: { template_type: 'generic', elements: [_element] } } };
-        } else if (_e.text && _e.buttons) {
+        } else if (_e.text && _e.buttons && _e.buttons.length) {
           _element.text = _e.text;
           if (_e.image) _element.image_url = _e.image;
-          _element.buttons = _e.buttons;
-          return { attachment: { type: 'template', payload: _extends({ template_type: 'button' }, _element) } };
+          _element.buttons = _e.buttons.toJSON();
+          return { attachment: { type: 'template', payload: (0, _extends3.default)({ template_type: 'button' }, _element) } };
         } else if (_e.text) {
           return { text: _e.text };
         } else if (_e.image) {
@@ -87,10 +111,14 @@ var Message = function () {
 
       throw Error('Could not form a message. Have you followed the format?');
     }
+  }, {
+    key: 'length',
+    get: function get() {
+      return this._elements.length;
+    }
   }]);
-
-  return Message;
+  return Elements;
 }();
 
-exports.default = Message;
-//# sourceMappingURL=Message.js.map
+exports.default = Elements;
+//# sourceMappingURL=Elements.js.map
