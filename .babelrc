@@ -1,0 +1,19 @@
+{
+  "presets": [
+    "es2015",
+    "stage-0"
+  ],
+  "plugins": [
+    "array-includes",
+    "syntax-async-functions",
+    "transform-object-rest-spread",
+    "syntax-class-properties",
+    [
+      "transform-async-to-module-method",
+      {
+        "module": "bluebird",
+        "method": "coroutine"
+      }
+    ]
+  ]
+}

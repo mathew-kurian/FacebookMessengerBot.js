@@ -1,0 +1,109 @@
+{
+  "root": true,
+  "globals": {
+    "console2": true,
+    "TraceError": true
+  },
+  "extends": "airbnb",
+  "plugins": [
+    "react",
+    "mocha",
+    "babel"
+  ],
+  "parser": "babel-eslint",
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "rules": {
+    "react/jsx-no-bind": [
+      2,
+      {
+        "ignoreRefs": true,
+        "allowArrowFunctions": true,
+        "allowBind": false
+      }
+    ],
+    "react/jsx-indent-props": 0,
+    "react/jsx-closing-bracket-location": [
+      2,
+      {
+        "location": "after-props"
+      }
+    ],
+    "mocha/no-exclusive-tests": 2,
+    "comma-dangle": [
+      2,
+      "never"
+    ],
+    "object-curly-spacing": [
+      2,
+      "never"
+    ],
+    "object-shorthand": [
+      2,
+      "always"
+    ],
+    "no-console": 0,
+    "no-extra-parens": 2,
+    "arrow-body-style": [
+      2,
+      "as-needed"
+    ],
+    "valid-jsdoc": 2,
+    "no-unreachable": 2,
+    "prefer-template": 2,
+    "prefer-arrow-callback": 2,
+    "arrow-spacing": [
+      2,
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "no-useless-call": 2,
+    "no-proto": 2,
+    "no-useless-concat": 2,
+    "max-len": [
+      2,
+      120,
+      4
+    ],
+    "no-param-reassign": 0,
+    "jsx-quotes": [
+      2,
+      "prefer-single"
+    ],
+    "indent": [
+      2,
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "brace-style": [
+      2,
+      "1tbs",
+      {
+        "allowSingleLine": false
+      }
+    ],
+    "no-underscore-dangle": 0,
+    "babel/generator-star-spacing": 1,
+    "babel/new-cap": 1,
+    "babel/array-bracket-spacing": 1,
+    "babel/object-curly-spacing": 1,
+    "babel/object-shorthand": 1,
+    "babel/arrow-parens": [
+      2,
+      "as-needed"
+    ],
+    "babel/no-await-in-loop": 1
+  },
+  "ecmaFeatures": {
+    "jsx": true,
+    "objectLiteralShorthandProperties": true,
+    "spread": true
+  }
+}

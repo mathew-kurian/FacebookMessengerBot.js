@@ -1,0 +1,6 @@
+**/*.compiled.js
+node_modules/
+public/
+resources/
+other/
+dist/
