@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Bot = exports.wait = exports.Buttons = exports.Elements = undefined;
+exports.Bot = exports.wait = exports.QuickReplies = exports.Buttons = exports.Elements = undefined;
 
 var _extends2 = require('babel-runtime/helpers/extends');
 
@@ -48,7 +48,7 @@ var _promise2 = _interopRequireDefault(_promise);
 var _bluebird = require('bluebird');
 
 var wait = exports.wait = function () {
-  var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee(time) {
+  var _ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee(time) {
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -66,8 +66,9 @@ var wait = exports.wait = function () {
       }
     }, _callee, this);
   }));
+
   return function wait(_x) {
-    return ref.apply(this, arguments);
+    return _ref.apply(this, arguments);
   };
 }();
 
@@ -89,6 +90,10 @@ var _Buttons = require('./Buttons.js');
 
 var _Buttons2 = _interopRequireDefault(_Buttons);
 
+var _QuickReplies = require('./QuickReplies.js');
+
+var _QuickReplies2 = _interopRequireDefault(_QuickReplies);
+
 var _fetch = require('./libs/fetch.js');
 
 var _fetch2 = _interopRequireDefault(_fetch);
@@ -101,6 +106,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.Elements = _Elements2.default;
 exports.Buttons = _Buttons2.default;
+exports.QuickReplies = _QuickReplies2.default;
 
 
 var userCache = {};
@@ -123,7 +129,7 @@ var Bot = function (_EventEmitter) {
   (0, _createClass3.default)(Bot, [{
     key: 'send',
     value: function () {
-      var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee2(to, message) {
+      var _ref2 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee2(to, message) {
         var text, err;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
@@ -178,7 +184,7 @@ var Bot = function (_EventEmitter) {
       }));
 
       function send(_x3, _x4) {
-        return ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       }
 
       return send;
@@ -186,11 +192,11 @@ var Bot = function (_EventEmitter) {
   }, {
     key: 'fetchUser',
     value: function () {
-      var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee3(id) {
+      var _ref3 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee3(id) {
         var fields = arguments.length <= 1 || arguments[1] === undefined ? 'first_name,last_name,profile_pic' : arguments[1];
         var cache = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
-        var key, props, _ref, body;
+        var key, props, _ref4, body;
 
         return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
@@ -216,8 +222,8 @@ var Bot = function (_EventEmitter) {
                 });
 
               case 9:
-                _ref = _context3.sent;
-                body = _ref.body;
+                _ref4 = _context3.sent;
+                body = _ref4.body;
 
 
                 props = body;
@@ -239,7 +245,7 @@ var Bot = function (_EventEmitter) {
       }));
 
       function fetchUser(_x5, _x6, _x7) {
-        return ref.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       }
 
       return fetchUser;
@@ -247,10 +253,11 @@ var Bot = function (_EventEmitter) {
   }, {
     key: 'handleMessage',
     value: function () {
-      var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee5(input) {
+      var _ref5 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee5(input) {
         var _this2 = this;
 
-        var body, message, postback, attachments, location;
+        var body, message, postback, _postback, attachments, location;
+
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -264,7 +271,7 @@ var Bot = function (_EventEmitter) {
                 message.raw = input;
 
                 message.sender.fetch = function () {
-                  var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee4(fields, cache) {
+                  var _ref6 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee4(fields, cache) {
                     var props;
                     return _regenerator2.default.wrap(function _callee4$(_context4) {
                       while (1) {
@@ -286,13 +293,16 @@ var Bot = function (_EventEmitter) {
                       }
                     }, _callee4, _this2);
                   }));
+
                   return function (_x11, _x12) {
-                    return ref.apply(this, arguments);
+                    return _ref6.apply(this, arguments);
                   };
                 }();
 
+                // POSTBACK
+
                 if (!message.postback) {
-                  _context5.next = 11;
+                  _context5.next = 12;
                   break;
                 }
 
@@ -304,6 +314,7 @@ var Bot = function (_EventEmitter) {
                 } catch (e) {
                   // ignore
                 }
+                message.isButton = true;
 
                 if (postback.hasOwnProperty('data')) {
                   message.postback = postback;
@@ -321,9 +332,9 @@ var Bot = function (_EventEmitter) {
 
                 return _context5.abrupt('return');
 
-              case 11:
+              case 12:
                 if (!message.delivery) {
-                  _context5.next = 17;
+                  _context5.next = 18;
                   break;
                 }
 
@@ -335,9 +346,9 @@ var Bot = function (_EventEmitter) {
                 this.emit('delivery', message, message.delivered);
                 return _context5.abrupt('return');
 
-              case 17:
+              case 18:
                 if (!message.optin) {
-                  _context5.next = 22;
+                  _context5.next = 23;
                   break;
                 }
 
@@ -346,7 +357,40 @@ var Bot = function (_EventEmitter) {
                 this.emit('optin', message, message.optin);
                 return _context5.abrupt('return');
 
-              case 22:
+              case 23:
+                if (!message.quick_reply) {
+                  _context5.next = 29;
+                  break;
+                }
+
+                _postback = {};
+
+
+                try {
+                  _postback = JSON.parse(message.quick_reply.payload);
+                } catch (e) {
+                  // ignore
+                }
+
+                message.isQuickReply = true;
+
+                if (_postback.hasOwnProperty('data')) {
+                  message.postback = _postback;
+                  message.data = _postback.data;
+                  message.event = _postback.event;
+
+                  this.emit('postback', message.event, message, message.data);
+
+                  if (_postback.hasOwnProperty('event')) {
+                    this.emit(message.event, message, message.data);
+                  }
+                } else {
+                  this.emit('invalid-postback', message, message.postback);
+                }
+
+                return _context5.abrupt('return');
+
+              case 29:
                 attachments = _lodash2.default.groupBy(message.attachments, 'type');
 
 
@@ -381,7 +425,7 @@ var Bot = function (_EventEmitter) {
 
                 this.emit('message', message);
 
-              case 30:
+              case 37:
               case 'end':
                 return _context5.stop();
             }
@@ -390,7 +434,7 @@ var Bot = function (_EventEmitter) {
       }));
 
       function handleMessage(_x10) {
-        return ref.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       }
 
       return handleMessage;

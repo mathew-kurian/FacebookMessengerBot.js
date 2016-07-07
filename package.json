@@ -1,6 +1,6 @@
 {
   "name": "facebook-messenger-bot",
-  "version": "0.0.5",
+  "version": "0.0.6-alpha.7",
   "description": "Simple, light-weight Facebook Messenger Bot API for Node/ES6",
   "main": "index.js",
   "dependencies": {

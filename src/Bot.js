@@ -3,10 +3,11 @@ import bodyParser from 'body-parser';
 import {Router} from 'express';
 import Elements from './Elements.js';
 import Buttons from './Buttons.js';
+import QuickReplies from './QuickReplies.js';
 import fetch from './libs/fetch.js';
 import _ from 'lodash';
 
-export {Elements, Buttons};
+export {Elements, Buttons, QuickReplies};
 
 const userCache = {};
 
@@ -87,12 +88,13 @@ class Bot extends EventEmitter {
 
     message.raw = input;
 
-    message.sender.fetch = async (fields, cache) => {
+    message.sender.fetch = async(fields, cache) => {
       const props = await this.fetchUser(message.sender.id, fields, cache);
       Object.assign(message.sender, props);
       return message.sender;
     };
 
+    // POSTBACK
     if (message.postback) {
       let postback = {};
 
@@ -101,6 +103,7 @@ class Bot extends EventEmitter {
       } catch (e) {
         // ignore
       }
+      message.isButton = true;
 
       if (postback.hasOwnProperty('data')) {
         message.postback = postback;
@@ -119,6 +122,7 @@ class Bot extends EventEmitter {
       return;
     }
 
+    // DELIVERY
     if (message.delivery) {
       Object.assign(message, message.delivery);
       message.delivered = message.delivery.mids;
@@ -129,10 +133,40 @@ class Bot extends EventEmitter {
       return;
     }
 
+    // OPTIN
     if (message.optin) {
       message.param = message.optin.ref || true;
       message.optin = message.param;
       this.emit('optin', message, message.optin);
+      return;
+    }
+
+    // QUICK_REPLY
+    if (message.quick_reply) {
+      let postback = {};
+
+      try {
+        postback = JSON.parse(message.quick_reply.payload);
+      } catch (e) {
+        // ignore
+      }
+
+      message.isQuickReply = true;
+
+      if (postback.hasOwnProperty('data')) {
+        message.postback = postback;
+        message.data = postback.data;
+        message.event = postback.event;
+
+        this.emit('postback', message.event, message, message.data);
+
+        if (postback.hasOwnProperty('event')) {
+          this.emit(message.event, message, message.data);
+        }
+      } else {
+        this.emit('invalid-postback', message, message.postback);
+      }
+
       return;
     }
 

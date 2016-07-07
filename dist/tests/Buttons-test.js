@@ -28,6 +28,15 @@ describe('Buttons', function () {
     }
   });
 
+  it('should parse object', function () {
+    try {
+      _.Buttons.from([{ data: [], text: 'sup' }, { data: [], text: 'cat' }]);
+      _assert2.default.ok('parsed correctly');
+    } catch (e) {
+      _assert2.default.fail('should have thrown an error');
+    }
+  });
+
   it('should throw an error', function () {
     try {
       var buttons = new _.Buttons();

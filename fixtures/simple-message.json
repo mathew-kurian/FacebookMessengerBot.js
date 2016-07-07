@@ -1,0 +1,16 @@
+{
+  "attachment": {
+    "type": "template",
+    "payload": {
+      "template_type": "button",
+      "text": "sup",
+      "buttons": [
+        {
+          "type": "web_url",
+          "url": "http://google.com",
+          "title": "Google"
+        }
+      ]
+    }
+  }
+}

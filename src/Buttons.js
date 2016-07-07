@@ -1,10 +1,10 @@
-class ButtonSet {
+class Buttons {
   constructor() {
     this._buttons = [];
   }
 
   add({text, data, url, event}) {
-    if (!data && !url) {
+    if (!data && !url && !event) {
       throw Error('Must provide a url or data i.e. {data: null} or {url: \'https://facebook.com\'}');
     }
 
@@ -26,9 +26,15 @@ class ButtonSet {
     return buttons;
   }
 
+  static from(array) {
+    const buttons = new Buttons();
+    array.forEach(arg => buttons.add(arg));
+    return buttons;
+  }
+
   get length() {
     return this._buttons.length;
   }
 }
 
-export default ButtonSet;
+export default Buttons;

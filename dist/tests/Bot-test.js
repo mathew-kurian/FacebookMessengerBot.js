@@ -30,7 +30,7 @@ describe('Bot', function () {
   if (token) {
     it('should fetch user profile', function (done) {
       bot.once('message', function () {
-        var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee(message) {
+        var _ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee(message) {
           var sender;
           return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
@@ -60,8 +60,9 @@ describe('Bot', function () {
             }
           }, _callee, undefined);
         }));
+
         return function (_x) {
-          return ref.apply(this, arguments);
+          return _ref.apply(this, arguments);
         };
       }());
 
@@ -71,7 +72,7 @@ describe('Bot', function () {
 
   it('should extract text', function (done) {
     bot.once('message', function () {
-      var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee2(message) {
+      var _ref2 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee2(message) {
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -86,8 +87,9 @@ describe('Bot', function () {
           }
         }, _callee2, undefined);
       }));
+
       return function (_x2) {
-        return ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       };
     }());
 
@@ -96,7 +98,7 @@ describe('Bot', function () {
 
   it('should extract images', function (done) {
     bot.once('message', function () {
-      var ref = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee3(message) {
+      var _ref3 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee3(message) {
         return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -111,8 +113,9 @@ describe('Bot', function () {
           }
         }, _callee3, undefined);
       }));
+
       return function (_x3) {
-        return ref.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       };
     }());
 

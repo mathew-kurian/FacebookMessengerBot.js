@@ -26,6 +26,16 @@ describe('Buttons', () => {
     }
   });
 
+  it('should parse object', () => {
+    try {
+      Buttons.from([{data: [], text: 'sup'}, {data: [], text: 'cat'}]);
+      assert.ok('parsed correctly');
+    } catch (e) {
+      assert.fail('should have thrown an error');
+    }
+  });
+
+
   it('should throw an error', () => {
     try {
       const buttons = new Buttons();

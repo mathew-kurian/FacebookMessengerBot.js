@@ -20,48 +20,49 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _utils = require('./libs/utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Buttons = function () {
-  function Buttons() {
-    (0, _classCallCheck3.default)(this, Buttons);
+var QuickReplies = function () {
+  function QuickReplies() {
+    (0, _classCallCheck3.default)(this, QuickReplies);
 
-    this._buttons = [];
+    this._quickReplies = [];
   }
 
-  (0, _createClass3.default)(Buttons, [{
+  (0, _createClass3.default)(QuickReplies, [{
     key: 'add',
     value: function add(_ref) {
       var text = _ref.text;
       var data = _ref.data;
-      var url = _ref.url;
       var event = _ref.event;
 
-      if (!data && !url && !event) {
+      if (!data && !event) {
         throw Error('Must provide a url or data i.e. {data: null} or {url: \'https://facebook.com\'}');
       }
 
-      this._buttons.push({ text: text || 'Button', event: event, data: data, url: url });
+      this._quickReplies.push({ text: text || 'QuickReply', event: event, data: data });
       return this;
     }
   }, {
     key: 'toJSON',
     value: function toJSON() {
-      var buttons = [];
+      var quickReplies = [];
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = (0, _getIterator3.default)(this._buttons), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var button = _step.value;
+        for (var _iterator = (0, _getIterator3.default)(this._quickReplies), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var reply = _step.value;
 
-          if (button.url) {
-            buttons.push({ type: 'web_url', url: button.url, title: button.text });
-          } else if (button.data) {
-            var payload = (0, _stringify2.default)({ data: button.data, event: button.event });
-            buttons.push({ type: 'postback', payload: payload, title: button.text });
+          var payload = (0, _stringify2.default)({ data: reply.data, event: reply.event });
+          if (!reply.text) {
+            throw new Error('No text attribute');
           }
+
+          quickReplies.push({ payload: payload, title: (0, _utils.cut)(String(reply.text), 20), content_type: 'text' });
         }
       } catch (err) {
         _didIteratorError = true;
@@ -78,25 +79,25 @@ var Buttons = function () {
         }
       }
 
-      return buttons;
+      return quickReplies;
     }
   }, {
     key: 'length',
     get: function get() {
-      return this._buttons.length;
+      return this._quickReplies.length;
     }
   }], [{
     key: 'from',
     value: function from(array) {
-      var buttons = new Buttons();
+      var quickreplies = new QuickReplies();
       array.forEach(function (arg) {
-        return buttons.add(arg);
+        return quickreplies.add(arg);
       });
-      return buttons;
+      return quickreplies;
     }
   }]);
-  return Buttons;
+  return QuickReplies;
 }();
 
-exports.default = Buttons;
-//# sourceMappingURL=Buttons.js.map
+exports.default = QuickReplies;
+//# sourceMappingURL=QuickReplies.js.map
