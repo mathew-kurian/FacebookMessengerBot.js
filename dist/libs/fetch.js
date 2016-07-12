@@ -51,7 +51,7 @@ function fetch(url) {
 
     if (opts.method === 'get') {
       req = req.query(opts.body);
-    } else if (method === 'post') {
+    } else {
       req = req.send(opts.body);
     }
 

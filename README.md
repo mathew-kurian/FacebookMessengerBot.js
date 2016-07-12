@@ -8,6 +8,7 @@ Internally, it uses [Promises to ensure compatibility with `async/await`](https:
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Install](#install)
 - [Example](#example)
 - [Demo](#demo)
@@ -17,7 +18,8 @@ Internally, it uses [Promises to ensure compatibility with `async/await`](https:
   - [Send Responses](#send-responses)
   - [Handle Postbacks](#handle-postbacks)
   - [Delivery and Optin](#delivery-and-optin)
-  - [Pipe Messages into Bot (i.e. I don't use Express!)](#pipe-elements-into-bot-ie-i-dont-use-express)
+  - [Set/Delete Greeting and Set Get Started](#setdelete-greeting-and-set-get-started)
+  - [Pipe Messages into Bot (i.e. I don't use Express!)](#pipe-messages-into-bot-ie-i-dont-use-express)
   - [Debugging](#debugging)
   - [Extras: Fetch User](#extras-fetch-user)
 - [Next Release (very soon)](#next-release-very-soon)
@@ -52,7 +54,10 @@ app.listen(3000);
 ```
 
 ## Demo
-Coming soon
+<a href="http://freedaa.com"><img src="other/banner-3.png" width="500"></a>
+
+I am a chatbot that helps you find free food. Find me on [Facebook Messenger](http://www.freedaa.com).
+
 
 ## API By Example
 
@@ -204,6 +209,16 @@ bot.on('delivery', async (message, mids) => {
 
     console.log(message, mids);
 });
+```
+
+### Set/Delete Greeting and Set Get Started
+```es6
+(async function () {
+  console.log(await bot.setGreeting('Hi my name is Freedaa, I can help find free food around and share the free food you find!'));
+  console.log(await bot.setGetStarted({data: {action: 'GET_STARTED'}}));
+  
+  // console.log(await bot.setGetStarted(null)); // DELETE greeting 
+})();
 ```
 
 ### Pipe Messages into Bot (i.e. I don't use Express!)

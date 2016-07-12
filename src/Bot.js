@@ -29,6 +29,47 @@ class Bot extends EventEmitter {
     this._verification = verification;
   }
 
+  async setGreeting(text) {
+    const {body: {result}} = await fetch('https://graph.facebook.com/v2.6/me/thread_settings', {
+      method: 'post',
+      json: true,
+      query: {access_token: this._token},
+      body: {setting_type: 'greeting', greeting: {text}}
+    });
+
+    return result;
+  }
+
+  async setGetStarted(input) {
+    if (!input) {
+      const {body: {result}} = await fetch('https://graph.facebook.com/v2.6/me/thread_settings', {
+        method: 'delete',
+        json: true,
+        query: {access_token: this._token},
+        body: {
+          setting_type: 'call_to_actions',
+          thread_state: 'new_thread'
+        }
+      });
+
+      return result;
+    }
+
+    const {data, event} = input;
+    const {body: {result}} = await fetch('https://graph.facebook.com/v2.6/me/thread_settings', {
+      method: 'post',
+      json: true,
+      query: {access_token: this._token},
+      body: {
+        setting_type: 'call_to_actions',
+        thread_state: 'new_thread',
+        call_to_actions: [{payload: JSON.stringify({data, event})}]
+      }
+    });
+
+    return result;
+  }
+
   async send(to, message) {
     if (this._debug) {
       console.log({recipient: {id: to}, message: message ? message.toJSON() : message});
@@ -37,6 +78,7 @@ class Bot extends EventEmitter {
     try {
       await fetch('https://graph.facebook.com/v2.6/me/messages', {
         method: 'post',
+        json: true,
         query: {access_token: this._token},
         body: {recipient: {id: to}, message}
       });

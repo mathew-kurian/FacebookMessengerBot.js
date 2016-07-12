@@ -13,7 +13,7 @@ export default function fetch(url, opts = {}) {
 
     if (opts.method === 'get') {
       req = req.query(opts.body);
-    } else if (method === 'post') {
+    } else {
       req = req.send(opts.body);
     }
 
