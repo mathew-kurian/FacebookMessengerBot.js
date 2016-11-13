@@ -34,9 +34,9 @@ var QuickReplies = function () {
   (0, _createClass3.default)(QuickReplies, [{
     key: 'add',
     value: function add(_ref) {
-      var text = _ref.text;
-      var data = _ref.data;
-      var event = _ref.event;
+      var text = _ref.text,
+          data = _ref.data,
+          event = _ref.event;
 
       if (!data && !event) {
         throw Error('Must provide a url or data i.e. {data: null} or {url: \'https://facebook.com\'}');

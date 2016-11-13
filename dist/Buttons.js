@@ -32,10 +32,10 @@ var Buttons = function () {
   (0, _createClass3.default)(Buttons, [{
     key: 'add',
     value: function add(_ref) {
-      var text = _ref.text;
-      var data = _ref.data;
-      var url = _ref.url;
-      var event = _ref.event;
+      var text = _ref.text,
+          data = _ref.data,
+          url = _ref.url,
+          event = _ref.event;
 
       if (!data && !url && !event) {
         throw Error('Must provide a url or data i.e. {data: null} or {url: \'https://facebook.com\'}');

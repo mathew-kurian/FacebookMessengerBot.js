@@ -115,10 +115,10 @@ var Bot = function (_EventEmitter) {
   (0, _inherits3.default)(Bot, _EventEmitter);
 
   function Bot(token, verification) {
-    var debug = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+    var debug = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     (0, _classCallCheck3.default)(this, Bot);
 
-    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Bot).call(this));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (Bot.__proto__ || (0, _getPrototypeOf2.default)(Bot)).call(this));
 
     _this._token = token;
     _this._debug = debug;
@@ -195,9 +195,8 @@ var Bot = function (_EventEmitter) {
                 return _context3.abrupt('return', _result);
 
               case 6:
-                data = input.data;
-                event = input.event;
-                _context3.next = 10;
+                data = input.data, event = input.event;
+                _context3.next = 9;
                 return (0, _fetch2.default)('https://graph.facebook.com/v2.6/me/thread_settings', {
                   method: 'post',
                   json: true,
@@ -209,12 +208,12 @@ var Bot = function (_EventEmitter) {
                   }
                 });
 
-              case 10:
+              case 9:
                 _ref6 = _context3.sent;
                 result = _ref6.body.result;
                 return _context3.abrupt('return', result);
 
-              case 13:
+              case 12:
               case 'end':
                 return _context3.stop();
             }
@@ -296,8 +295,8 @@ var Bot = function (_EventEmitter) {
     key: 'fetchUser',
     value: function () {
       var _ref8 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee5(id) {
-        var fields = arguments.length <= 1 || arguments[1] === undefined ? 'first_name,last_name,profile_pic' : arguments[1];
-        var cache = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+        var fields = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'first_name,last_name,profile_pic';
+        var cache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
         var key, props, _ref9, body;
 

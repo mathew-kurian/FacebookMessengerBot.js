@@ -36,15 +36,16 @@ var Elements = function () {
 
     this._elements = [];
     this._quickreplies = null;
+    this._listStyle = null;
   }
 
   (0, _createClass3.default)(Elements, [{
     key: 'add',
     value: function add(_ref) {
-      var text = _ref.text;
-      var image = _ref.image;
-      var subtext = _ref.subtext;
-      var buttons = _ref.buttons;
+      var text = _ref.text,
+          image = _ref.image,
+          subtext = _ref.subtext,
+          buttons = _ref.buttons;
 
       if (buttons) {
         if (!(buttons instanceof _Buttons2.default)) {
@@ -73,6 +74,15 @@ var Elements = function () {
       }
 
       this._quickreplies = quickreplies;
+    }
+  }, {
+    key: 'setListStyle',
+    value: function setListStyle(listStyle) {
+      if (listStyle === 'large' || listStyle === 'compact') {
+        this._listStyle = listStyle;
+      } else {
+        throw Error('Valid values for list styles are "large" or "compact"');
+      }
     }
   }, {
     key: 'getQuickReplies',
@@ -117,13 +127,17 @@ var Elements = function () {
             }
           }
 
-          return { attachment: { type: 'template', payload: { template_type: 'generic', elements: elements } } };
+          if (_this._listStyle) {
+            return { attachment: { type: 'template', payload: { template_type: 'list', top_element_style: _this._listStyle, elements: elements } } };
+          } else {
+            return { attachment: { type: 'template', payload: { template_type: 'generic', elements: elements } } };
+          }
         } else if (_this._elements.length === 1) {
           var _e = _this._elements[0];
           var _element = {};
-          if (_e.text && _e.buttons && _e.buttons.length && _e.image) {
+          if (_e.text && _e.buttons && _e.buttons.length && (_e.image || _e.subtext)) {
             _element.title = _e.text;
-            _element.image_url = _e.image;
+            if (_e.image) _element.image_url = _e.image;
             if (_e.subtext) _element.subtitle = _e.subtext;
             _element.buttons = _e.buttons.toJSON();
             return { attachment: { type: 'template', payload: { template_type: 'generic', elements: [_element] } } };
