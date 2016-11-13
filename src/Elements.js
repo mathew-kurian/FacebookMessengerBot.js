@@ -60,9 +60,9 @@ class Elements {
       } else if (this._elements.length === 1) {
         const e = this._elements[0];
         const element = {};
-        if (e.text && e.buttons && e.buttons.length && e.image) {
+        if (e.text && e.buttons && e.buttons.length && (e.image || e.subtext)) {
           element.title = e.text;
-          element.image_url = e.image;
+          if (e.image) element.image_url = e.image;
           if (e.subtext) element.subtitle = e.subtext;
           element.buttons = e.buttons.toJSON();
           return {attachment: {type: 'template', payload: {template_type: 'generic', elements: [element]}}};
