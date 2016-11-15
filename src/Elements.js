@@ -39,7 +39,7 @@ class Elements {
 
   setListStyle(listStyle) {
     if (listStyle === 'large' || listStyle === 'compact') {
-      this._listStyle = listStyle
+      this._listStyle = listStyle;
     } else {
       throw Error('Valid values for list styles are "large" or "compact"');
     }
@@ -66,8 +66,13 @@ class Elements {
           elements.push(element);
         }
         if (this._listStyle) {
-          return {attachment: {type: 'template', payload: {template_type: 'list', top_element_style: this._listStyle, elements}}};
-        } else {
+          return {
+            attachment: {
+              type: 'template',
+              payload: {template_type: 'list', top_element_style: this._listStyle, elements}
+            }
+          };
+        } else if (!this._listStyle) {
           return {attachment: {type: 'template', payload: {template_type: 'generic', elements}}};
         }
       } else if (this._elements.length === 1) {
