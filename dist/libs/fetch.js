@@ -37,7 +37,7 @@ var _superagent2 = _interopRequireDefault(_superagent);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function fetch(url) {
-  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   return new _promise2.default(function (resolve, reject) {
     if ((0, _typeof3.default)(opts.body) === 'object' || opts.json) {
@@ -66,10 +66,9 @@ function fetch(url) {
 
       try {
         for (var _iterator = (0, _getIterator3.default)((0, _entries2.default)(opts.headers)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var _step$value = (0, _slicedToArray3.default)(_step.value, 2);
-
-          var k = _step$value[0];
-          var v = _step$value[1];
+          var _step$value = (0, _slicedToArray3.default)(_step.value, 2),
+              k = _step$value[0],
+              v = _step$value[1];
 
           req = req.set(k, v);
         }
@@ -98,11 +97,11 @@ function fetch(url) {
             err = res.error;
           }
 
-          var _err = err;
-          var status = _err.status;
-          var _method = _err.method;
-          var path = _err.path;
-          var text = _err.text;
+          var _err = err,
+              status = _err.status,
+              _method = _err.method,
+              path = _err.path,
+              text = _err.text;
 
 
           Object.defineProperty(err, 'res', { value: res, enumerable: false, configurable: false });

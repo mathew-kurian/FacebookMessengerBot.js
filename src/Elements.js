@@ -5,6 +5,7 @@ class Elements {
   constructor() {
     this._elements = [];
     this._quickreplies = null;
+    this._listStyle = null;
   }
 
   add({text, image, subtext, buttons}) {
@@ -36,6 +37,14 @@ class Elements {
     this._quickreplies = quickreplies;
   }
 
+  setListStyle(listStyle) {
+    if (listStyle === 'large' || listStyle === 'compact') {
+      this._listStyle = listStyle;
+    } else {
+      throw Error('Valid values for list styles are "large" or "compact"');
+    }
+  }
+
   getQuickReplies() {
     return this._quickreplies;
   }
@@ -56,13 +65,22 @@ class Elements {
           if (e.buttons && e.buttons.length) element.buttons = e.buttons.toJSON();
           elements.push(element);
         }
-        return {attachment: {type: 'template', payload: {template_type: 'generic', elements}}};
+        if (this._listStyle) {
+          return {
+            attachment: {
+              type: 'template',
+              payload: {template_type: 'list', top_element_style: this._listStyle, elements}
+            }
+          };
+        } else if (!this._listStyle) {
+          return {attachment: {type: 'template', payload: {template_type: 'generic', elements}}};
+        }
       } else if (this._elements.length === 1) {
         const e = this._elements[0];
         const element = {};
-        if (e.text && e.buttons && e.buttons.length && e.image) {
+        if (e.text && e.buttons && e.buttons.length && (e.image || e.subtext)) {
           element.title = e.text;
-          element.image_url = e.image;
+          if (e.image) element.image_url = e.image;
           if (e.subtext) element.subtitle = e.subtext;
           element.buttons = e.buttons.toJSON();
           return {attachment: {type: 'template', payload: {template_type: 'generic', elements: [element]}}};

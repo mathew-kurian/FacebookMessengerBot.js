@@ -1,7 +1,7 @@
-# Facebook Messenger Bot 
+# Facebook Messenger Bot
 [![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)  
-The purpose of this library is to offer a simple, light-weight Facebook Messenger Bot API for Node with ES6 support. 
-Internally, it uses [Promises to ensure compatibility with `async/await`](https://github.com/bluejamesbond/FacebookMessengerBot.js/blob/master/.babelrc#L13). 
+The purpose of this library is to offer a simple, light-weight Facebook Messenger Bot API for Node with ES6 support.
+Internally, it uses [Promises to ensure compatibility with `async/await`](https://github.com/bluejamesbond/FacebookMessengerBot.js/blob/master/.babelrc#L13).
 
 **Objective:** Given a set of inputs, the library automatically selects the optimal message format to display this data.
 
@@ -27,7 +27,7 @@ Internally, it uses [Promises to ensure compatibility with `async/await`](https:
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Install 
+## Install
 ```
 npm install facebook-messenger-bot --save -E
 ```
@@ -41,10 +41,10 @@ const bot = new Bot(myPageAccessToken, myVerification);
 bot.on('message', async message => {
     const {sender} = message;
     await sender.fetch('first_name');
-    
+
     const out = new Elements();
     out.add({text: `hey ${sender.first_name}, how are you!`});
-    
+
     await bot.send(sender.id, out);
 });
 
@@ -79,37 +79,37 @@ import {Elements} from 'facebook-messenger-bot';
 
 bot.on('message', async message => {
     const {sender} = message;
-    
+
     // get sender id
     console.log(`Received a message from ${sender.id}`);
-    
+
     // fetch additional user properties
     await sender.fetch(`first_name,last_name,profile_pic`, true); // true: use cache
-    
+
     console.log(`Fetched ${sender.first_name}, ${sender.last_name}, ${sender.profile_pic}`);
-    
+
     const {text, images, videos, location, audio} = message;
-    
+
     if (text) {
         console.log(text);      // 'hey'
     }
-        
+
     if (images) {
         console.log(images);    // ['http://...', 'http://...']
     }
-    
+
     if (videos) {
         console.log(videos);    // ['http://...', 'http://...']
     }
-    
+
     if (location) {
         console.log(location);  // {title, long, lat, url}
     }
-    
+
     if (audio) {
         console.log(audio);     // url
     }
-    
+
     console.log(message);       // log the message to learn about all the attributes
 });
 ```
@@ -120,24 +120,24 @@ import {Elements} from 'facebook-messenger-bot'; // import Bot class
 
 bot.on('message', async message => {
     const {sender} = message;
-    
+
     let out, buttons;
-    
+
     // ---- send text
     out = new Elements();
     out.add({text: 'hey! what up'});
     await bot.send(sender.id, out);
-    
+
     // wait for 1s
     await bot.wait(1000);
-    
+
     // ---- send image
     const out = new Elements();
     out.add({image: 'https://developers.facebook.com/images/devsite/fb4d_logo-2x.png'});
     await bot.send(sender.id, out);
-    
+
     await bot.wait(1000);
-    
+
     // ---- send buttons (single card)
     buttons = new Buttons();
     buttons.add({text: 'Google', url: 'http://google.com'});
@@ -146,9 +146,16 @@ bot.on('message', async message => {
     out = new Elements();
     out.add({text: 'search engines', subtext: 'click to get redirected', buttons}); // add a card
     await bot.send(to, out);
-    
+
     await bot.wait(2000);
-    
+
+  	// ---- send list
+  	out = new Elements();
+    out.setListStyle('compact'); // or 'large'
+  	out.add({text: 'Item 1', subtext: 'Subtitle'}); // add list item
+  	out.add({text: 'Item 2', subtext: 'Subtitle'}); // add list item
+  	await bot.send(sender.id, out);
+
     // ---- send image + buttons (multiple cards)
     buttons = new Buttons();
     buttons.add({text: 'Google', url: 'http://google.com'});
@@ -163,10 +170,10 @@ bot.on('message', async message => {
 ```es6
 bot.on('message', async message => {
     const {sender} = message;
-        
+
     let out, buttons;
-        
-    // ---- send buttons 
+
+    // ---- send buttons
     buttons = new Buttons();
     buttons.add({text: 'Google', data: 'google', event: 'search-engine'});
     buttons.add({text: 'Bing', data: 'bing', event: 'search-engine'});
@@ -185,7 +192,7 @@ bot.on('search-engine', async (data, message) => {
 bot.on('postback', async (event, message, data) => {
     assert(data === message.data);
     assert(event === message.event);
-    
+
     console.log(event, message, data);
 });
 
@@ -216,8 +223,8 @@ bot.on('delivery', async (message, mids) => {
 (async function () {
   console.log(await bot.setGreeting('Hi my name is Freedaa, I can help find free food around and share the free food you find!'));
   console.log(await bot.setGetStarted({data: {action: 'GET_STARTED'}}));
-  
-  // console.log(await bot.setGetStarted(null)); // DELETE greeting 
+
+  // console.log(await bot.setGetStarted(null)); // DELETE greeting
 })();
 ```
 
