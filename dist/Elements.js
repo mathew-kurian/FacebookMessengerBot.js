@@ -128,8 +128,13 @@ var Elements = function () {
           }
 
           if (_this._listStyle) {
-            return { attachment: { type: 'template', payload: { template_type: 'list', top_element_style: _this._listStyle, elements: elements } } };
-          } else {
+            return {
+              attachment: {
+                type: 'template',
+                payload: { template_type: 'list', top_element_style: _this._listStyle, elements: elements }
+              }
+            };
+          } else if (!_this._listStyle) {
             return { attachment: { type: 'template', payload: { template_type: 'generic', elements: elements } } };
           }
         } else if (_this._elements.length === 1) {

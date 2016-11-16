@@ -1,5 +1,5 @@
 # Facebook Messenger Bot
-[![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)  
+[![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)
 The purpose of this library is to offer a simple, light-weight Facebook Messenger Bot API for Node with ES6 support.
 Internally, it uses [Promises to ensure compatibility with `async/await`](https://github.com/bluejamesbond/FacebookMessengerBot.js/blob/master/.babelrc#L13).
 
@@ -226,6 +226,22 @@ bot.on('delivery', async (message, mids) => {
 
   // console.log(await bot.setGetStarted(null)); // DELETE greeting
 })();
+```
+
+### Set/Delete persistent menu
+```es6
+// use postback buttons for the menu, other buttons are not supported by facebook
+menuButtons = new menuButtons();
+
+menuButtons.add({text: 'Google', data: 'google', event: 'search-engine'});
+menuButtons.add({text: 'Bing', data: 'bing', event: 'search-engine'});
+menuButtons.add({text: 'Yahoo', data: 'yahoo', event: 'search-engine'});
+
+console.log(await bot.setPersistentMenu(menuButtons));
+
+// console.log(await bot.setPersistentMenu(null)); // DELETE Persisten menu
+
+
 ```
 
 ### Pipe Messages into Bot (i.e. I don't use Express!)

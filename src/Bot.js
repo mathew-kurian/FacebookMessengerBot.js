@@ -70,6 +70,36 @@ class Bot extends EventEmitter {
     return result;
   }
 
+  async setPersistentMenu(input) {
+    if (!input) {
+      const {body: {result}} = await fetch('https://graph.facebook.com/v2.6/me/thread_settings', {
+        method: 'delete',
+        json: true,
+        query: {access_token: this._token},
+        body: {
+          setting_type: 'call_to_actions',
+          thread_state: 'existing_thread'
+        }
+      });
+
+      return result;
+    }
+
+    const {body: {result}} = await fetch('https://graph.facebook.com/v2.6/me/thread_settings', {
+      method: 'post',
+      json: true,
+      query: {access_token: this._token},
+      body: {
+        setting_type: 'call_to_actions',
+        thread_state: 'existing_thread',
+        call_to_actions: input
+      }
+    });
+
+    return result;
+  }
+
+
   async send(to, message) {
     if (this._debug) {
       console.log({recipient: {id: to}, message: message ? message.toJSON() : message});
