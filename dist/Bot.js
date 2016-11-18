@@ -523,7 +523,7 @@ var Bot = function (_EventEmitter) {
                 return _context8.abrupt('return');
 
               case 23:
-                if (!message.quick_reply) {
+                if (!(message.quick_reply && !message.is_echo)) {
                   _context8.next = 29;
                   break;
                 }

@@ -6,7 +6,7 @@ describe('QuickReplies', () => {
   it('#toJSON', () => {
     const quickReplies = new QuickReplies();
     quickReplies.add({text: 'Google', data: 'http://google.com'});
-    quickReplies.add({text: 'Yahoo', data: 'http://yahoo.com'});
+    quickReplies.add({text: 'Address', isLocation: true});
     quickReplies.add({text: 'Bing', data: 'http://bing.com'});
 
     assert.deepEqual([{
@@ -14,9 +14,9 @@ describe('QuickReplies', () => {
       title: 'Google',
       content_type: 'text'
     }, {
-      payload: '{"data":"http://yahoo.com"}',
-      title: 'Yahoo',
-      content_type: 'text'
+      payload: '{}',
+      title: 'Address',
+      content_type: 'location'
     }, {
       payload: '{"data":"http://bing.com"}',
       title: 'Bing',

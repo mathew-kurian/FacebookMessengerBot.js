@@ -1,5 +1,5 @@
 # Facebook Messenger Bot
-[![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)
+[![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)  
 The purpose of this library is to offer a simple, light-weight Facebook Messenger Bot API for Node with ES6 support.
 Internally, it uses [Promises to ensure compatibility with `async/await`](https://github.com/bluejamesbond/FacebookMessengerBot.js/blob/master/.babelrc#L13).
 
@@ -146,6 +146,14 @@ bot.on('message', async message => {
     out = new Elements();
     out.add({text: 'search engines', subtext: 'click to get redirected', buttons}); // add a card
     await bot.send(to, out);
+    
+    // ---- send share/call buttons
+    buttons = new Buttons();
+    buttons.add({text: 'Call us', phone: '+808 863718243'});
+    buttons.add({share: true});
+    out = new Elements();
+    out.add({text: 'ABC Flower shop', subtext: 'Office hours 10am - 6pm', buttons}); // add a card
+    await bot.send(to, out);
 
     await bot.wait(2000);
 
@@ -163,6 +171,21 @@ bot.on('message', async message => {
     out = new Elements();
     out.add({image: 'http://google.com/logo.png', text: 'hey', buttons}); // first card
     out.add({image: 'http://yahoo.com/logo.png', text: 'hey', buttons}); // second card
+    await bot.send(to, out);
+
+    // ---- send call button
+    buttons = new Buttons();
+    buttons.add({text: 'Call us now', phone: '+16505551234'});
+    out = new Elements();
+    out.add({text: 'Contact us', subtext: 'click to start a phone call', buttons});
+    await bot.send(to, out);
+
+    // ---- send quick reply for location
+    let replies = new QuickReplies();
+    replies.add({text: 'location', isLocation: true});
+    out = new Elements();
+    out.add({text: 'Send us your location'});
+    out.setQuickReplies(replies);
     await bot.send(to, out);
 });
 ```

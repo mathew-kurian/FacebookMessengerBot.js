@@ -36,13 +36,14 @@ var QuickReplies = function () {
     value: function add(_ref) {
       var text = _ref.text,
           data = _ref.data,
-          event = _ref.event;
+          event = _ref.event,
+          isLocation = _ref.isLocation;
 
-      if (!data && !event) {
+      if (!data && !event && !isLocation) {
         throw Error('Must provide a url or data i.e. {data: null} or {url: \'https://facebook.com\'}');
       }
 
-      this._quickReplies.push({ text: text || 'QuickReply', event: event, data: data });
+      this._quickReplies.push({ text: text || 'QuickReply', event: event, data: data, isLocation: isLocation });
       return this;
     }
   }, {
@@ -57,12 +58,16 @@ var QuickReplies = function () {
         for (var _iterator = (0, _getIterator3.default)(this._quickReplies), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var reply = _step.value;
 
+          var contentType = 'text';
           var payload = (0, _stringify2.default)({ data: reply.data, event: reply.event });
           if (!reply.text) {
             throw new Error('No text attribute');
           }
+          if (reply.isLocation) {
+            contentType = 'location';
+          }
 
-          quickReplies.push({ payload: payload, title: (0, _utils.cut)(String(reply.text), 20), content_type: 'text' });
+          quickReplies.push({ payload: payload, title: (0, _utils.cut)(String(reply.text), 20), content_type: contentType });
         }
       } catch (err) {
         _didIteratorError = true;

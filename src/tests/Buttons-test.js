@@ -6,13 +6,13 @@ describe('Buttons', () => {
   it('#toJSON', () => {
     const buttons = new Buttons();
     buttons.add({text: 'Google', url: 'http://google.com'});
-    buttons.add({text: 'Yahoo', url: 'http://yahoo.com'});
-    buttons.add({text: 'Bing', url: 'http://bing.com'});
+    buttons.add({text: 'Call us', phone: '+808 63718243'});
+    buttons.add({share: true});
 
     assert.deepEqual([
       {type: 'web_url', url: 'http://google.com', title: 'Google'},
-      {type: 'web_url', url: 'http://yahoo.com', title: 'Yahoo'},
-      {type: 'web_url', url: 'http://bing.com', title: 'Bing'}
+      {type: 'phone_number', title: 'Call us', payload: '+808 63718243'},
+      {type: 'element_share'}
     ], buttons.toJSON());
   });
 

@@ -35,13 +35,16 @@ var Buttons = function () {
       var text = _ref.text,
           data = _ref.data,
           url = _ref.url,
-          event = _ref.event;
+          phone = _ref.phone,
+          event = _ref.event,
+          share = _ref.share,
+          account_linking = _ref.account_linking;
 
-      if (!data && !url && !event) {
+      if (!data && !url && !event && !phone && !share) {
         throw Error('Must provide a url or data i.e. {data: null} or {url: \'https://facebook.com\'}');
       }
 
-      this._buttons.push({ text: text || 'Button', event: event, data: data, url: url });
+      this._buttons.push({ text: text || 'Button', event: event, data: data, phone: phone, share: share, url: url, account_linking: account_linking });
       return this;
     }
   }, {
@@ -56,11 +59,23 @@ var Buttons = function () {
         for (var _iterator = (0, _getIterator3.default)(this._buttons), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var button = _step.value;
 
-          if (button.url) {
+          if (button.account_linking) {
+            if (!button.account_linking.linking) {
+              buttons.push({ type: 'account_unlink' });
+            } else if (button.url) {
+              buttons.push({ type: 'account_link', url: button.url });
+            } else {
+              console.log('[fb-msger-bot] Missing url for account linking');
+            }
+          } else if (button.url) {
             buttons.push({ type: 'web_url', url: button.url, title: button.text });
-          } else if (button.data) {
+          } else if (button.data != null) {
             var payload = (0, _stringify2.default)({ data: button.data, event: button.event });
             buttons.push({ type: 'postback', payload: payload, title: button.text });
+          } else if (button.share) {
+            buttons.push({ type: 'element_share' });
+          } else if (button.phone) {
+            buttons.push({ type: 'phone_number', payload: button.phone, title: button.text });
           }
         }
       } catch (err) {

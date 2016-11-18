@@ -12,7 +12,7 @@ describe('QuickReplies', function () {
   it('#toJSON', function () {
     var quickReplies = new _.QuickReplies();
     quickReplies.add({ text: 'Google', data: 'http://google.com' });
-    quickReplies.add({ text: 'Yahoo', data: 'http://yahoo.com' });
+    quickReplies.add({ text: 'Address', isLocation: true });
     quickReplies.add({ text: 'Bing', data: 'http://bing.com' });
 
     _assert2.default.deepEqual([{
@@ -20,9 +20,9 @@ describe('QuickReplies', function () {
       title: 'Google',
       content_type: 'text'
     }, {
-      payload: '{"data":"http://yahoo.com"}',
-      title: 'Yahoo',
-      content_type: 'text'
+      payload: '{}',
+      title: 'Address',
+      content_type: 'location'
     }, {
       payload: '{"data":"http://bing.com"}',
       title: 'Bing',

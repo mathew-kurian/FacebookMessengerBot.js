@@ -214,7 +214,7 @@ class Bot extends EventEmitter {
     }
 
     // QUICK_REPLY
-    if (message.quick_reply) {
+    if (message.quick_reply && !message.is_echo) {
       let postback = {};
 
       try {

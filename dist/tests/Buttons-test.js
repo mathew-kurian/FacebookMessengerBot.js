@@ -12,10 +12,10 @@ describe('Buttons', function () {
   it('#toJSON', function () {
     var buttons = new _.Buttons();
     buttons.add({ text: 'Google', url: 'http://google.com' });
-    buttons.add({ text: 'Yahoo', url: 'http://yahoo.com' });
-    buttons.add({ text: 'Bing', url: 'http://bing.com' });
+    buttons.add({ text: 'Call us', phone: '+808 63718243' });
+    buttons.add({ share: true });
 
-    _assert2.default.deepEqual([{ type: 'web_url', url: 'http://google.com', title: 'Google' }, { type: 'web_url', url: 'http://yahoo.com', title: 'Yahoo' }, { type: 'web_url', url: 'http://bing.com', title: 'Bing' }], buttons.toJSON());
+    _assert2.default.deepEqual([{ type: 'web_url', url: 'http://google.com', title: 'Google' }, { type: 'phone_number', title: 'Call us', payload: '+808 63718243' }, { type: 'element_share' }], buttons.toJSON());
   });
 
   it('should throw an error', function () {
