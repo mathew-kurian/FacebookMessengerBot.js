@@ -17,7 +17,7 @@ class Buttons {
     for (const button of this._buttons) {
       if (button.url) {
         buttons.push({type: 'web_url', url: button.url, title: button.text});
-      } else if (button.data) {
+      } else if (button.data != null) {
         const payload = JSON.stringify({data: button.data, event: button.event});
         buttons.push({type: 'postback', payload, title: button.text});
       }
