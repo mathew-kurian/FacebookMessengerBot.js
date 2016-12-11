@@ -218,7 +218,7 @@ class Bot extends EventEmitter {
       let postback = {};
 
       try {
-        postback = JSON.parse(message.quick_reply.payload);
+        postback = JSON.parse(message.quick_reply.payload) || {};
       } catch (e) {
         // ignore
       }
