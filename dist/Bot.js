@@ -409,7 +409,7 @@ var Bot = function (_EventEmitter) {
         }, _callee6, this);
       }));
 
-      function fetchUser(_x8, _x9, _x10) {
+      function fetchUser(_x8) {
         return _ref11.apply(this, arguments);
       }
 
@@ -459,7 +459,7 @@ var Bot = function (_EventEmitter) {
                     }, _callee7, _this2);
                   }));
 
-                  return function (_x14, _x15) {
+                  return function (_x12, _x13) {
                     return _ref14.apply(this, arguments);
                   };
                 }();
@@ -532,7 +532,7 @@ var Bot = function (_EventEmitter) {
 
 
                 try {
-                  _postback = JSON.parse(message.quick_reply.payload);
+                  _postback = JSON.parse(message.quick_reply.payload) || {};
                 } catch (e) {
                   // ignore
                 }
@@ -598,7 +598,7 @@ var Bot = function (_EventEmitter) {
         }, _callee8, this);
       }));
 
-      function handleMessage(_x13) {
+      function handleMessage(_x11) {
         return _ref13.apply(this, arguments);
       }
 
