@@ -253,17 +253,18 @@ bot.on('delivery', async (message, mids) => {
 
 ### Set/Delete persistent menu
 ```es6
-// use postback buttons for the menu, other buttons are not supported by facebook
-menuButtons = new menuButtons();
+(async function () {
+  // use postback buttons for the menu, other buttons are not supported by facebook
+  menuButtons = new Buttons();
 
-menuButtons.add({text: 'Google', data: 'google', event: 'search-engine'});
-menuButtons.add({text: 'Bing', data: 'bing', event: 'search-engine'});
-menuButtons.add({text: 'Yahoo', data: 'yahoo', event: 'search-engine'});
+  menuButtons.add({text: 'Google', data: 'google', event: 'search-engine'});
+  menuButtons.add({text: 'Bing', data: 'bing', event: 'search-engine'});
+  menuButtons.add({text: 'Yahoo', data: 'yahoo', event: 'search-engine'});
 
-console.log(await bot.setPersistentMenu(menuButtons));
+  console.log(await bot.setPersistentMenu(menuButtons));
 
-// console.log(await bot.setPersistentMenu(null)); // DELETE Persisten menu
-
+  // console.log(await bot.setPersistentMenu(null)); // DELETE Persisten menu
+})();
 
 ```
 
