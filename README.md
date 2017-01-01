@@ -19,6 +19,7 @@ Internally, it uses [Promises to ensure compatibility with `async/await`](https:
   - [Handle Postbacks](#handle-postbacks)
   - [Delivery and Optin](#delivery-and-optin)
   - [Set/Delete Greeting and Set Get Started](#setdelete-greeting-and-set-get-started)
+  - [Sender Actions](#sender-actions)
   - [Pipe Messages into Bot (i.e. I don't use Express!)](#pipe-messages-into-bot-ie-i-dont-use-express)
   - [Debugging](#debugging)
   - [Extras: Fetch User](#extras-fetch-user)
@@ -146,7 +147,7 @@ bot.on('message', async message => {
     out = new Elements();
     out.add({text: 'search engines', subtext: 'click to get redirected', buttons}); // add a card
     await bot.send(to, out);
-    
+
     // ---- send share/call buttons
     buttons = new Buttons();
     buttons.add({text: 'Call us', phone: '+808 863718243'});
@@ -264,6 +265,25 @@ bot.on('delivery', async (message, mids) => {
   console.log(await bot.setPersistentMenu(menuButtons));
 
   // console.log(await bot.setPersistentMenu(null)); // DELETE Persisten menu
+})();
+
+```
+
+### Sender Actions
+[Sender actions](https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions) allow you to mark messages as read, and set the typing indicator on or off.
+
+```es6
+  // Show the typing indicator. to is a sender id.
+  await Bot.startTyping(to);
+
+  // Hide the typing indicator. to is a sender id.
+  await Bot.stopTyping(to);
+
+  // Show or hide the typing indicator. to is a sender id. showTypingIndicator is a boolean. True show the indicator, false hides it.
+  await Bot.setTyping(to, showTypingIndicator);
+
+  // generic senderAction function, can be used to set all options.
+  await Bot.senderAction(to, 'typing_on');
 })();
 
 ```
