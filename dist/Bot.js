@@ -355,40 +355,179 @@ var Bot = function (_EventEmitter) {
       return send;
     }()
   }, {
-    key: 'fetchUser',
+    key: 'senderAction',
     value: function () {
-      var _ref11 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee6(id) {
-        var fields = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'first_name,last_name,profile_pic';
-        var cache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-        var key, props, _ref12, body;
-
+      var _ref11 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee6(to, sender_action) {
+        var text, err;
         return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
+              case 0:
+                if (this._debug) {
+                  console.log({ recipient: { id: to }, sender_action: sender_action });
+                }
+
+                _context6.prev = 1;
+                _context6.next = 4;
+                return (0, _fetch2.default)('https://graph.facebook.com/v2.6/me/messages', {
+                  method: 'post',
+                  json: true,
+                  query: { access_token: this._token },
+                  body: { recipient: { id: to }, sender_action: sender_action }
+                });
+
+              case 4:
+                _context6.next = 15;
+                break;
+
+              case 6:
+                _context6.prev = 6;
+                _context6.t0 = _context6['catch'](1);
+
+                if (!_context6.t0.text) {
+                  _context6.next = 14;
+                  break;
+                }
+
+                text = _context6.t0.text;
+
+                try {
+                  err = JSON.parse(_context6.t0.text).error;
+
+                  text = (err.type || 'Unknown') + ': ' + (err.message || 'No message');
+                } catch (ee) {
+                  // ignore
+                }
+
+                throw Error(text);
+
+              case 14:
+                throw _context6.t0;
+
+              case 15:
+              case 'end':
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this, [[1, 6]]);
+      }));
+
+      function senderAction(_x8, _x9) {
+        return _ref11.apply(this, arguments);
+      }
+
+      return senderAction;
+    }()
+  }, {
+    key: 'setTyping',
+    value: function () {
+      var _ref12 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee7(to, isTyping) {
+        var sender_action;
+        return _regenerator2.default.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                sender_action = isTyping ? 'typing_on' : 'typing_off';
+
+                this.senderAction(to, sender_action);
+
+              case 2:
+              case 'end':
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this);
+      }));
+
+      function setTyping(_x10, _x11) {
+        return _ref12.apply(this, arguments);
+      }
+
+      return setTyping;
+    }()
+  }, {
+    key: 'startTyping',
+    value: function () {
+      var _ref13 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee8(to) {
+        return _regenerator2.default.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                this.setTyping(to, true);
+
+              case 1:
+              case 'end':
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this);
+      }));
+
+      function startTyping(_x12) {
+        return _ref13.apply(this, arguments);
+      }
+
+      return startTyping;
+    }()
+  }, {
+    key: 'stopTyping',
+    value: function () {
+      var _ref14 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee9(to) {
+        return _regenerator2.default.wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                this.setTyping(to, false);
+
+              case 1:
+              case 'end':
+                return _context9.stop();
+            }
+          }
+        }, _callee9, this);
+      }));
+
+      function stopTyping(_x13) {
+        return _ref14.apply(this, arguments);
+      }
+
+      return stopTyping;
+    }()
+  }, {
+    key: 'fetchUser',
+    value: function () {
+      var _ref15 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee10(id) {
+        var fields = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'first_name,last_name,profile_pic';
+        var cache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+        var key, props, _ref16, body;
+
+        return _regenerator2.default.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
               case 0:
                 key = id + fields;
                 props = void 0;
 
                 if (!(cache && userCache[key])) {
-                  _context6.next = 7;
+                  _context10.next = 7;
                   break;
                 }
 
                 props = userCache[key];
                 props.fromCache = true;
-                _context6.next = 14;
+                _context10.next = 14;
                 break;
 
               case 7:
-                _context6.next = 9;
+                _context10.next = 9;
                 return (0, _fetch2.default)('https://graph.facebook.com/v2.6/' + id, {
                   query: { access_token: this._token, fields: fields }, json: true
                 });
 
               case 9:
-                _ref12 = _context6.sent;
-                body = _ref12.body;
+                _ref16 = _context10.sent;
+                body = _ref16.body;
 
 
                 props = body;
@@ -399,18 +538,18 @@ var Bot = function (_EventEmitter) {
                 }
 
               case 14:
-                return _context6.abrupt('return', props);
+                return _context10.abrupt('return', props);
 
               case 15:
               case 'end':
-                return _context6.stop();
+                return _context10.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee10, this);
       }));
 
-      function fetchUser(_x8) {
-        return _ref11.apply(this, arguments);
+      function fetchUser(_x14) {
+        return _ref15.apply(this, arguments);
       }
 
       return fetchUser;
@@ -418,14 +557,14 @@ var Bot = function (_EventEmitter) {
   }, {
     key: 'handleMessage',
     value: function () {
-      var _ref13 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee8(input) {
+      var _ref17 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee12(input) {
         var _this2 = this;
 
         var body, message, postback, _postback, attachments, location;
 
-        return _regenerator2.default.wrap(function _callee8$(_context8) {
+        return _regenerator2.default.wrap(function _callee12$(_context12) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context12.prev = _context12.next) {
               case 0:
                 body = JSON.parse((0, _stringify2.default)(input));
                 message = body.entry[0].messaging[0];
@@ -436,38 +575,38 @@ var Bot = function (_EventEmitter) {
                 message.raw = input;
 
                 message.sender.fetch = function () {
-                  var _ref14 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee7(fields, cache) {
+                  var _ref18 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee11(fields, cache) {
                     var props;
-                    return _regenerator2.default.wrap(function _callee7$(_context7) {
+                    return _regenerator2.default.wrap(function _callee11$(_context11) {
                       while (1) {
-                        switch (_context7.prev = _context7.next) {
+                        switch (_context11.prev = _context11.next) {
                           case 0:
-                            _context7.next = 2;
+                            _context11.next = 2;
                             return _this2.fetchUser(message.sender.id, fields, cache);
 
                           case 2:
-                            props = _context7.sent;
+                            props = _context11.sent;
 
                             (0, _assign2.default)(message.sender, props);
-                            return _context7.abrupt('return', message.sender);
+                            return _context11.abrupt('return', message.sender);
 
                           case 5:
                           case 'end':
-                            return _context7.stop();
+                            return _context11.stop();
                         }
                       }
-                    }, _callee7, _this2);
+                    }, _callee11, _this2);
                   }));
 
-                  return function (_x12, _x13) {
-                    return _ref14.apply(this, arguments);
+                  return function (_x18, _x19) {
+                    return _ref18.apply(this, arguments);
                   };
                 }();
 
                 // POSTBACK
 
                 if (!message.postback) {
-                  _context8.next = 12;
+                  _context12.next = 12;
                   break;
                 }
 
@@ -495,11 +634,11 @@ var Bot = function (_EventEmitter) {
                   this.emit('invalid-postback', message, message.postback);
                 }
 
-                return _context8.abrupt('return');
+                return _context12.abrupt('return');
 
               case 12:
                 if (!message.delivery) {
-                  _context8.next = 18;
+                  _context12.next = 18;
                   break;
                 }
 
@@ -509,22 +648,22 @@ var Bot = function (_EventEmitter) {
                 delete message.delivery;
 
                 this.emit('delivery', message, message.delivered);
-                return _context8.abrupt('return');
+                return _context12.abrupt('return');
 
               case 18:
                 if (!message.optin) {
-                  _context8.next = 23;
+                  _context12.next = 23;
                   break;
                 }
 
                 message.param = message.optin.ref || true;
                 message.optin = message.param;
                 this.emit('optin', message, message.optin);
-                return _context8.abrupt('return');
+                return _context12.abrupt('return');
 
               case 23:
                 if (!(message.quick_reply && !message.is_echo)) {
-                  _context8.next = 29;
+                  _context12.next = 29;
                   break;
                 }
 
@@ -553,7 +692,7 @@ var Bot = function (_EventEmitter) {
                   this.emit('invalid-postback', message, message.postback);
                 }
 
-                return _context8.abrupt('return');
+                return _context12.abrupt('return');
 
               case 29:
                 attachments = _lodash2.default.groupBy(message.attachments, 'type');
@@ -592,14 +731,14 @@ var Bot = function (_EventEmitter) {
 
               case 37:
               case 'end':
-                return _context8.stop();
+                return _context12.stop();
             }
           }
-        }, _callee8, this);
+        }, _callee12, this);
       }));
 
-      function handleMessage(_x11) {
-        return _ref13.apply(this, arguments);
+      function handleMessage(_x17) {
+        return _ref17.apply(this, arguments);
       }
 
       return handleMessage;

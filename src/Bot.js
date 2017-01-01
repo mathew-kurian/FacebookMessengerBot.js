@@ -129,6 +129,48 @@ class Bot extends EventEmitter {
     }
   }
 
+  async senderAction(to, sender_action) {
+    if (this._debug) {
+      console.log({recipient: {id: to}, sender_action});
+    }
+
+    try {
+      await fetch('https://graph.facebook.com/v2.6/me/messages', {
+        method: 'post',
+        json: true,
+        query: {access_token: this._token},
+        body: {recipient: {id: to}, sender_action}
+      });
+    } catch (e) {
+      if (e.text) {
+        let text = e.text;
+        try {
+          const err = JSON.parse(e.text).error;
+          text = `${err.type || 'Unknown'}: ${err.message || 'No message'}`;
+        } catch (ee) {
+          // ignore
+        }
+
+        throw Error(text);
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  async setTyping(to, isTyping) {
+    const sender_action = isTyping ? 'typing_on' : 'typing_off';
+    this.senderAction(to, sender_action);
+  }
+
+  async startTyping(to) {
+    this.setTyping(to, true);
+  }
+
+  async stopTyping(to) {
+    this.setTyping(to, false);
+  }
+
   async fetchUser(id, fields = 'first_name,last_name,profile_pic', cache = false) {
     const key = id + fields;
     let props;
