@@ -129,9 +129,9 @@ class Bot extends EventEmitter {
     }
   }
 
-  async senderAction(to, sender_action) {
+  async senderAction(to, senderAction) {
     if (this._debug) {
-      console.log({recipient: {id: to}, sender_action});
+      console.log({recipient: {id: to}, senderAction});
     }
 
     try {
@@ -139,7 +139,7 @@ class Bot extends EventEmitter {
         method: 'post',
         json: true,
         query: {access_token: this._token},
-        body: {recipient: {id: to}, sender_action}
+        body: {recipient: {id: to}, sender_action: senderAction}
       });
     } catch (e) {
       if (e.text) {
@@ -159,8 +159,8 @@ class Bot extends EventEmitter {
   }
 
   async setTyping(to, isTyping) {
-    const sender_action = isTyping ? 'typing_on' : 'typing_off';
-    this.senderAction(to, sender_action);
+    const senderAction = isTyping ? 'typing_on' : 'typing_off';
+    this.senderAction(to, senderAction);
   }
 
   async startTyping(to) {

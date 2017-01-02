@@ -357,14 +357,14 @@ var Bot = function (_EventEmitter) {
   }, {
     key: 'senderAction',
     value: function () {
-      var _ref11 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee6(to, sender_action) {
+      var _ref11 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee6(to, _senderAction) {
         var text, err;
         return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
                 if (this._debug) {
-                  console.log({ recipient: { id: to }, sender_action: sender_action });
+                  console.log({ recipient: { id: to }, senderAction: _senderAction });
                 }
 
                 _context6.prev = 1;
@@ -373,7 +373,7 @@ var Bot = function (_EventEmitter) {
                   method: 'post',
                   json: true,
                   query: { access_token: this._token },
-                  body: { recipient: { id: to }, sender_action: sender_action }
+                  body: { recipient: { id: to }, sender_action: _senderAction }
                 });
 
               case 4:
@@ -422,14 +422,14 @@ var Bot = function (_EventEmitter) {
     key: 'setTyping',
     value: function () {
       var _ref12 = (0, _bluebird.coroutine)(_regenerator2.default.mark(function _callee7(to, isTyping) {
-        var sender_action;
+        var senderAction;
         return _regenerator2.default.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                sender_action = isTyping ? 'typing_on' : 'typing_off';
+                senderAction = isTyping ? 'typing_on' : 'typing_off';
 
-                this.senderAction(to, sender_action);
+                this.senderAction(to, senderAction);
 
               case 2:
               case 'end':
