@@ -279,11 +279,11 @@ bot.on('delivery', async (message, mids) => {
   // Hide the typing indicator. to is a sender id.
   await Bot.stopTyping(to);
 
-  // Show or hide the typing indicator. to is a sender id. showTypingIndicator is a boolean. True show the indicator, false hides it.
+  // Show or hide the typing indicator. to is a sender id. showTypingIndicator is a boolean. True shows the indicator, false hides it.
   await Bot.setTyping(to, showTypingIndicator);
 
   // generic senderAction function, can be used to set all options.
-  await Bot.senderAction(to, 'typing_on');
+  await Bot.senderAction(to, 'mark_read');
 })();
 
 ```
