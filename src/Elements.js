@@ -61,8 +61,6 @@ class Elements {
           const element = {};
           if (e.text) element.title = e.text;
           if (e.image) element.image_url = e.image;
-          if (e.audio) element.audio_url = e.audio;
-          if (e.video) element.video_url = e.video;
           if (e.subtext) element.subtitle = e.subtext;
           if (e.buttons && e.buttons.length) element.buttons = e.buttons.toJSON();
           elements.push(element);
