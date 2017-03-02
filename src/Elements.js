@@ -8,7 +8,7 @@ class Elements {
     this._listStyle = null;
   }
 
-  add({text, image, subtext, buttons}) {
+  add({text, image, audio, video, subtext, buttons}) {
     if (buttons) {
       if (!(buttons instanceof Buttons)) {
         if (Array.isArray(buttons)) {
@@ -19,7 +19,7 @@ class Elements {
       }
     }
 
-    this._elements.push({text, image, subtext, buttons});
+    this._elements.push({text, image, audio, video, subtext, buttons});
     return this;
   }
 
@@ -61,6 +61,8 @@ class Elements {
           const element = {};
           if (e.text) element.title = e.text;
           if (e.image) element.image_url = e.image;
+          if (e.audio) element.audio_url = e.audio;
+          if (e.video) element.video_url = e.video;
           if (e.subtext) element.subtitle = e.subtext;
           if (e.buttons && e.buttons.length) element.buttons = e.buttons.toJSON();
           elements.push(element);
@@ -93,6 +95,10 @@ class Elements {
           return {text: e.text};
         } else if (e.image) {
           return {attachment: {type: 'image', payload: {url: e.image}}};
+        } else if (e.audio) {
+          return {attachment: {type: 'audio', payload: {url: e.audio}}};
+        } else if (e.video) {
+          return {attachment: {type: 'video', payload: {url: e.video}}};
         }
       }
 
