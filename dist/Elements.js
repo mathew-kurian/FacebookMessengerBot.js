@@ -44,6 +44,8 @@ var Elements = function () {
     value: function add(_ref) {
       var text = _ref.text,
           image = _ref.image,
+          audio = _ref.audio,
+          video = _ref.video,
           subtext = _ref.subtext,
           buttons = _ref.buttons;
 
@@ -57,7 +59,7 @@ var Elements = function () {
         }
       }
 
-      this._elements.push({ text: text, image: image, subtext: subtext, buttons: buttons });
+      this._elements.push({ text: text, image: image, audio: audio, video: video, subtext: subtext, buttons: buttons });
       return this;
     }
   }, {
@@ -155,6 +157,10 @@ var Elements = function () {
             return { text: _e.text };
           } else if (_e.image) {
             return { attachment: { type: 'image', payload: { url: _e.image } } };
+          } else if (_e.audio) {
+            return { attachment: { type: 'audio', payload: { url: _e.audio } } };
+          } else if (_e.video) {
+            return { attachment: { type: 'video', payload: { url: _e.video } } };
           }
         }
 
