@@ -1,3 +1,6 @@
+# *LIBRARY IS NO LONGER MAINTAINED*
+If you want to adopt + maintain this library, please drop me a message - bluejamesbond@gmail.com
+
 # Facebook Messenger Bot
 [![](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js.svg?branch=master)](https://travis-ci.org/bluejamesbond/FacebookMessengerBot.js)  
 The purpose of this library is to offer a simple, light-weight Facebook Messenger Bot API for Node with ES6 support.
